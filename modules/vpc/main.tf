@@ -4,10 +4,10 @@ variable "name" {
   default     = "example-tg"  # Example default value
 }
 
-variable "vpc_id" {
-  description = "VPC ID"
-  type        = string
-}
+#variable "vpc_id" {
+#  description = "VPC ID"
+#  type        = string
+#}
 
 variable "target_id" {
   description = "Target ID (instance ID)"
