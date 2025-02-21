@@ -7,12 +7,6 @@ on:
         description: 'Branch to deploy'
         required: true
         default: 'main'
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
 
 permissions:
   id-token: write
