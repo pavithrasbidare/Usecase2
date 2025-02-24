@@ -3,13 +3,13 @@ provider "aws" {
 }
 
 module "vpc" {
-  source     = "./modules/vpc"
+  source     = "../modules/vpc"
   cidr_block = var.vpc_cidr
   name       = "ExampleVPC"
 }
 
 module "public_subnet_1" {
-  source            = "./modules/subnet"
+  source            = "../modules/subnet"
   vpc_id            = module.vpc.vpc_id
   cidr_block        = var.subnet_cidrs[0]
   availability_zone = var.availability_zones[0]
@@ -17,7 +17,7 @@ module "public_subnet_1" {
 }
 
 module "public_subnet_2" {
-  source            = "./modules/subnet"
+  source            = "../modules/subnet"
   vpc_id            = module.vpc.vpc_id
   cidr_block        = var.subnet_cidrs[1]
   availability_zone = var.availability_zones[1]
@@ -25,7 +25,7 @@ module "public_subnet_2" {
 }
 
 module "public_subnet_3" {
-  source            = "./modules/subnet"
+  source            = "../modules/subnet"
   vpc_id            = module.vpc.vpc_id
   cidr_block        = var.subnet_cidrs[2]
   availability_zone = var.availability_zones[2]
@@ -33,7 +33,7 @@ module "public_subnet_3" {
 }
 
 module "security_group" {
-  source = "./modules/security_group"
+  source = "../modules/security_group"
   vpc_id = module.vpc.vpc_id
   name   = "example-sg"
 }
@@ -58,7 +58,7 @@ resource "aws_route_table_association" "public_subnet_3" {
 }
 
 module "homepage_instance" {
-  source          = "./modules/ec2"
+  source          = "../modules/ec2"
   ami_id          = var.ami_id
   instance_type   = var.instance_type
   subnet_id       = module.public_subnet_1.subnet_id
@@ -76,7 +76,7 @@ module "homepage_instance" {
 }
 
 module "images_instance" {
-  source          = "./modules/ec2"
+  source          = "../modules/ec2"
   ami_id          = var.ami_id
   instance_type   = var.instance_type
   subnet_id       = module.public_subnet_2.subnet_id
@@ -94,7 +94,7 @@ module "images_instance" {
 }
 
 module "register_instance" {
-  source          = "./modules/ec2"
+  source          = "../modules/ec2"
   ami_id          = var.ami_id
   instance_type   = var.instance_type
   subnet_id       = module.public_subnet_3.subnet_id
@@ -112,28 +112,28 @@ module "register_instance" {
 }
 
 module "homepage_tg" {
-  source    = "./modules/target_group"
+  source    = "../modules/target_group"
   name      = "homepage-tg"
   vpc_id    = module.vpc.vpc_id
   target_id = module.homepage_instance.instance_id
 }
 
 module "images_tg" {
-  source    = "./modules/target_group"
+  source    = "../modules/target_group"
   name      = "images-tg"
   vpc_id    = module.vpc.vpc_id
   target_id = module.images_instance.instance_id
 }
 
 module "register_tg" {
-  source    = "./modules/target_group"
+  source    = "../modules/target_group"
   name      = "register-tg"
   vpc_id    = module.vpc.vpc_id
   target_id = module.register_instance.instance_id
 }
 
 module "alb" {
-  source                  = "./modules/alb"
+  source                  = "../modules/alb"
   name                    = "example-alb"
   security_groups         = [module.security_group.security_group_id]
   subnets                 = [module.public_subnet_1.subnet_id, module.public_subnet_2.subnet_id, module.public_subnet_3.subnet_id]
