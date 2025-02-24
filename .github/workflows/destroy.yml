@@ -1,6 +1,12 @@
 name: Destroy Terraform
 
 on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       branch:
@@ -36,10 +42,17 @@ jobs:
           role-to-assume: arn:aws:iam::302263075199:role/OIDC-Terraform
           aws-region: us-west-2
 
+      - name: List Directory Contents
+        run: ls -la ./Infra
+
       - name: Terraform Init
         run: terraform init
-        working-directory: ./
+        working-directory: ./Infra
+
+      - name: Terraform Plan
+        run: terraform plan -var-file=terraform.tfvars
+        working-directory: ./Infra
 
       - name: Terraform Destroy
         run: terraform destroy -var-file=terraform.tfvars -auto-approve
-        working-directory: ./
+        working-directory: ./Infra
