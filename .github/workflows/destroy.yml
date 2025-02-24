@@ -28,7 +28,7 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: 1.0.0
+          terraform_version: 1.1.4
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -36,10 +36,13 @@ jobs:
           role-to-assume: arn:aws:iam::302263075199:role/OIDC-Terraform
           aws-region: us-west-2
 
+      - name: List Directory Contents
+        run: ls -la ./Infra
+
       - name: Terraform Init
         run: terraform init
-        working-directory: ./
+        working-directory: ./Infra
 
       - name: Terraform Destroy
-        run: terraform destroy -var-file=../Infra/terraform.tfvars -auto-approve
-        working-directory: ./
+        run: terraform destroy -var-file=terraform.tfvars -auto-approve
+        working-directory: ./Infra
